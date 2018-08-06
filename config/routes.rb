@@ -1,3 +1,5 @@
 Rails.application.routes.draw do
-  # For details on the DSL available within this file, see http://guides.rubyonrails.org/routing.html
+  resources :users, :sessions
+  get 'static_pages/club_page', to: 'static_pages#club', as: 'club'
+  root 'static_pages#index'
 end

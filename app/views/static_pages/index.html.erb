@@ -1,0 +1,6 @@
+<h1>Bienvenue !</h1>
+<% if logged_in? %>
+<%= link_to 'Page du Club', club_url %>
+<% else %>
+<%= link_to 'Connectez vous', new_session_path, {class: "login"} %> ou <%= link_to 'créez un nouveau compte', new_user_path, {class: "signin"} %> pour accèder à la page du Club.
+<% end %>

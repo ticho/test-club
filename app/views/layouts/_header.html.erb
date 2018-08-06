@@ -1,0 +1,28 @@
+<nav class="navbar navbar-expand-lg navbar-light bg-light sticky-top">
+
+  <a class="navbar-brand" href="/">Accueil</a>
+
+  <ul class="navbar-nav ml-auto">
+  <% if logged_in? %>
+    <li class="nav-item align-self-center mr-3">
+      <span class="navbar-link align-self-center">
+      <%= link_to 'Aller à la page du Club', club_url %>
+      </span>
+    </li>
+    <li class="nav-item">
+      <span class="navbar-text mr-3">
+        Connecté en tant que <%= current_user.first_name %> <%= current_user.last_name %>
+      </span>
+    </li>
+     <li class="nav-item mr-3">
+      <%= link_to 'Ma page', user_path(session[:user_id]), {class: "btn btn-outline-primary"} %>
+    </li>
+    <li class="nav-item">
+      <%= link_to 'Logout', session_path(session[:user_id]), {method: 'delete', class: "btn btn-outline-primary"} %>
+    </li>
+  <% else %>
+    <%= link_to 'Login', new_session_path, {class: "login btn btn-outline-primary my-2 my-sm-0"} %>
+  <% end %>
+  </ul>
+
+</nav>
