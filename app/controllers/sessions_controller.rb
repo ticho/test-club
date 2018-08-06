@@ -4,6 +4,7 @@ class SessionsController < ApplicationController
   def new
   end
 
+  # create a new session
   def create
     user = User.find_by(email: params[:email])
     if user && user.authenticate(params[:password])
@@ -16,6 +17,7 @@ class SessionsController < ApplicationController
     end
   end
 
+  # logout, destroy session
   def destroy
     log_out
     flash["success"] = "Vous êtes déconnecté.e."

@@ -1,6 +1,7 @@
 class UsersController < ApplicationController
   include SessionsHelper
 
+  # create a new user
   def create
     user = User.new(user_params)
     if !user.save
@@ -13,6 +14,7 @@ class UsersController < ApplicationController
     end
   end
 
+  # show a user's page
   def show
     if !logged_in?
       flash["danger"] = "Vous devez vous connecter pour acceder à cette page."
@@ -21,6 +23,7 @@ class UsersController < ApplicationController
     @user = User.find(params[:id])
   end
 
+  # show the page edit form
   def edit
     if !logged_in?
       flash["danger"] = "Vous devez vous connecter pour modifier ce profil."
@@ -31,7 +34,8 @@ class UsersController < ApplicationController
     end
     @user = current_user
   end
-  
+
+  # edit a user's profile
   def update
     if request.env['PATH_INFO'] != "/users/#{current_user.id}"
       flash["danger"] = 'Vous ne pouvez pas modifier ce profil.'
@@ -47,6 +51,7 @@ class UsersController < ApplicationController
 
   private
 
+  # used for strong parameters
   def user_params
     params.require(:user).permit(:first_name, :last_name, :email, :password, :password_confirmation)
   end

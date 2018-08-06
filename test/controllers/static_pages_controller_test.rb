@@ -8,11 +8,6 @@ class StaticPagesControllerTest < ActionDispatch::IntegrationTest
     assert_response :success
   end
 
-  # test "should get club_page" do
-  #   get static_pages_club_page_url
-  #   assert_response :success
-  # end
-
   test "navbar links to home" do
     get root_path
     assert_select 'nav a[href=?]', root_path

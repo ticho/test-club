@@ -1,24 +1,36 @@
-# README
+# Test Club
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+[https://tibo-test-club.herokuapp.com/](https://tibo-test-club.herokuapp.com/)
 
-Things you may want to cover:
+Rails project that serves as an introduction to TDD.
 
-* Ruby version
+We have a User model. A user can sign-up with his first/last name, email address and password.
 
-* System dependencies
+When logged in he has access to the list of users in the club.
 
-* Configuration
+You can visit someone's page to see his profile but you are only allowed to modify your own.
 
-* Database creation
+We wrote a battery of tests to make sure everything runs smoothly, using rails default test library : Minitest.
 
-* Database initialization
+## Installation
 
-* How to run the test suite
+After cloning the repo, make sure you have postgres installed on your machine.
 
-* Services (job queues, cache servers, search engines, etc.)
+From there :
+```sh
+$ createdb test-club_development
+$ createdb test-club_test
+$ createuser test-club --createdb
+```
 
-* Deployment instructions
+To install the app dependencies, start the db and seed it :
+```sh
+$ bundle install
+$ rails db:migrate
+$ rails db:seed
+```
 
-* ...
+To start the run the app locally
+```sh
+$ rails s
+```
