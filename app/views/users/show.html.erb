@@ -21,4 +21,8 @@
   </td>
 </tr>
 </tbody>
+
 </table>
+<% if @user.id == current_user.id %>
+<%= link_to 'Modifier mon Profil', edit_user_path(@user.id), id: 'page_link', class: 'btn btn-outline-primary' %>
+<% end %>

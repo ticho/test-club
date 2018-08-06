@@ -6,6 +6,7 @@
     <th>Prénom</th>
     <th>Nom</th>
     <th>Email</th>
+    <th>Lien</th>
   </tr>
 </thead>
 <tbody>
@@ -19,6 +20,9 @@
   </td>
   <td>
     <%= user.email %>
+  </td>
+  <td>
+    <%= link_to 'Voir le profil', user_path(user.id) %>
   </td>
 </tr>
 <% end %>

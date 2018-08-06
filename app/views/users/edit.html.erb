@@ -1,0 +1,19 @@
+<h1>Editer mon profil</h1>
+<%= form_with model: @user, method: 'patch', class: "form-group" do |form| %>
+  <%= form.label :first_name, "Prénom" %> 
+  <%= form.text_field :first_name, class: "form-control" %>
+  <br>
+  <%= form.label :last_name, "Nom" %> 
+  <%= form.text_field :last_name, class: "form-control" %>
+  <br>
+  <%= form.label :email, "Email" %> 
+  <%= form.email_field :email, class: "form-control" %>
+  <br>
+  <%= form.label :password, "Mot de passe" %> 
+  <%= form.password_field :password, class: "form-control" %>
+  <br>
+  <%= form.label :password_confirmation, "Confirmation du mot de passe" %> 
+  <%= form.password_field :password_confirmation, class: "form-control" %>
+  <br>
+  <%= form.submit "Editer", class: 'btn btn-outline-primary' %>
+<% end %>

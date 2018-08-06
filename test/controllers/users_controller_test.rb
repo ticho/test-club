@@ -143,7 +143,7 @@ class UsersControllerTest < ActionDispatch::IntegrationTest
     )
     get user_path(user.id)
     assert flash[:danger], 'Vous devez vous connecter pour acceder à cette page.'
-    assert request.env['PATH_INFO'], root_path
+    assert request.env['PATH_INFO'], new_session_path
   end
   test 'accessing someone elses page' do
     user = User.create(
@@ -162,7 +162,111 @@ class UsersControllerTest < ActionDispatch::IntegrationTest
     )
     post sessions_path, params: {email: 'lolilol@lol.com', password: 'qqqqq'}
     get user_path(user2.id) 
-    assert flash[:danger], 'Vous n\'avez pas accès à la page de cet utilisateur.'
+    # assert flash[:danger], 'Vous n\'avez pas accès à la page de cet utilisateur.'
+    assert request.env['PATH_INFO'], user_path(user2.id)
+    # no link to modify on someone else's page
+    assert_select 'a.page_link', false
+  end
+
+  # testing the edit page
+  test "can edit your own page with valid form" do
+    user = User.create(
+      first_name: 'tibo',
+      last_name: 'thp',
+      email: 'lolilol@lol.com',
+      password: 'qqqqq',
+      password_confirmation: 'qqqqq'
+    ) 
+    post sessions_path, params: {email: 'lolilol@lol.com', password: 'qqqqq'}
+    get edit_user_path(user.id)
+    # can access the page
+    assert request.env['PATH_INFO'], edit_user_path(user.id)
+    # test prepopulated
+    assert_select 'input#user_first_name' do
+       assert_select "[value=?]", user.first_name
+    end
+    assert_select 'input#user_last_name[value=?]', user.last_name
+    assert_select 'input#user_email[value=?]', user.email
+    patch user_path(user.id), params: {
+      user: {
+      first_name: 'newtibo',
+      last_name: 'newthp',
+      email: 'newlolilol@lol.com',
+      password: 'newqqqqq',
+      password_confirmation: 'newqqqqq' 
+    }}
+    assert flash["success"], "Modifications effectuées."
+  end
+  test "cannot edit someone else's page" do
+    user = User.create(
+      first_name: 'tibo',
+      last_name: 'thp',
+      email: 'lolilol@lol.com',
+      password: 'qqqqq',
+      password_confirmation: 'qqqqq'
+    )
+    user2 = User.create(
+      first_name: 'tibo2',
+      last_name: 'thp',
+      email: 'lolilol2@lol.com',
+      password: 'qqqqq',
+      password_confirmation: 'qqqqq'
+    )
+    post sessions_path, params: {email: 'lolilol@lol.com', password: 'qqqqq'}
+    patch user_path(user2.id), params: {
+      user: {
+      first_name: 'newtibo',
+      last_name: 'newthp',
+      email: 'newlolilol@lol.com',
+      password: 'newqqqqq',
+      password_confirmation: 'newqqqqq' 
+    }}
+    assert flash["danger"], "Vous ne pouvez pas modifier ce profil."
+    get edit_user_path(user2.id)
+    assert flash["danger"], "Vous ne pouvez pas modifier ce profil."
     assert request.env['PATH_INFO'], root_path
+  end
+  test "cannot access the page if not connected" do
+    user2 = User.create(
+      first_name: 'tibo2',
+      last_name: 'thp',
+      email: 'lolilol2@lol.com',
+      password: 'qqqqq',
+      password_confirmation: 'qqqqq'
+    )
+    get edit_user_path(user2.id)
+    assert flash["danger"], "Vous devez vous connecter pour modifier ce profil."
+    assert request.env['PATH_INFO'], root_path
+  end
+  test "cannot post an invalid form" do
+    user = User.create(
+      first_name: 'tibo',
+      last_name: 'thp',
+      email: 'lolilol@lol.com',
+      password: 'qqqqq',
+      password_confirmation: 'qqqqq'
+    )
+    post sessions_path, params: {email: 'lolilol@lol.com', password: 'qqqqq'}
+    patch user_path(user.id), params: {
+      user: {
+      first_name: 'newtibo',
+      last_name: 'newthp',
+      email: 'newlolilollolcom',
+      password: 'newqqqqq',
+      password_confirmation: 'newqqqqq' 
+    }}
+    assert flash["danger"], "Profil non sauvegardé."
+  end
+  test "profile page accessible from club page" do
+    user = User.create(
+     first_name: 'tibo',
+     last_name: 'thp',
+     email: 'lolilol@lol.com',
+     password: 'qqqqq',
+     password_confirmation: 'qqqqq'
+    )
+   post sessions_path, params: {email: 'lolilol@lol.com', password: 'qqqqq'}
+   get club_path
+   assert_select 'a', 'Voir le profil'
   end
 end

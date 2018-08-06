@@ -16,12 +16,33 @@ class UsersController < ApplicationController
   def show
     if !logged_in?
       flash["danger"] = "Vous devez vous connecter pour acceder à cette page."
-      redirect_to root_path
-    elsif request.env['PATH_INFO'] != "/users/#{current_user.id}"
-      flash["danger"] = 'Vous n\'avez pas accès à la page de cet utilisateur.'
+      redirect_to new_session_path
+    end
+    @user = User.find(params[:id])
+  end
+
+  def edit
+    if !logged_in?
+      flash["danger"] = "Vous devez vous connecter pour modifier ce profil."
+      redirect_to new_session_path
+    elsif request.env['PATH_INFO'] != "/users/#{current_user.id}/edit"
+      flash["danger"] = 'Vous ne pouvez pas modifier ce profil.'
       redirect_to root_path
     end
     @user = current_user
+  end
+  
+  def update
+    if request.env['PATH_INFO'] != "/users/#{current_user.id}"
+      flash["danger"] = 'Vous ne pouvez pas modifier ce profil.'
+      redirect_to root_path
+    elsif current_user.update(user_params)
+      flash["success"] = "Modifications effectuées."
+      redirect_to root_path
+    else
+      flash["danger"] = "Profil non sauvegardé."
+      redirect_to root_path
+    end
   end
 
   private
